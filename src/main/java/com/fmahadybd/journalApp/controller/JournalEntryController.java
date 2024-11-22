@@ -1,45 +1,51 @@
 package com.fmahadybd.journalApp.controller;
 
 import com.fmahadybd.journalApp.entity.JournalEntry;
+import com.fmahadybd.journalApp.service.JournalService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/journal")
 public class JournalEntryController {
 
-    private Map<Long,JournalEntry> journalEntries = new HashMap<>();
+   @Autowired
+   private JournalService journalService;
 
-    @GetMapping
+    @GetMapping("/")
     public List<JournalEntry> getAll(){
-        return new ArrayList<>(journalEntries.values());
+        return journalService.getAll();
     }
     @PostMapping
     public boolean savedNew(@RequestBody JournalEntry newEntry){
-        journalEntries.put(newEntry.getId(),newEntry);;
-        return true;
+       return journalService.addNew(newEntry);
 
     }
-    @GetMapping("/id/{myId}")
-    public JournalEntry getById(@PathVariable Long myId){
-        return journalEntries.get(myId);
 
+
+    @GetMapping("/id/{myId}")
+    public Optional<JournalEntry> getById(@PathVariable Long myId){
+        return journalService.getById(myId);
+
+    }
+
+    @PostMapping("/add-new")
+    public Boolean addNew(JournalEntry journalEntry){
+
+        return journalService.addNew(journalEntry);
     }
 
     @PutMapping("/id/{id}")
     public JournalEntry updateById(@RequestBody JournalEntry journalEntry
                                                     ,@PathVariable Long id){
-        return journalEntries.put(id,journalEntry);
+        return journalService.updateById(id,journalEntry);
 
     }
     @DeleteMapping("/id/{id}")
     public String deleteEntry(@PathVariable Long id){
-        journalEntries.remove(id);
-        return "delete sucessfuly";
+        return journalService.delete(id);
     }
 
 }
