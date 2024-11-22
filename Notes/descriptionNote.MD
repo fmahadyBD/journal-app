@@ -68,3 +68,26 @@
             - **DELETE**: Delete the resource.
 
 ---
+Improvements Made
+
+    Validation Annotations:
+        Added @NotBlank for title validation in JournalEntry entity.
+
+    Null/Blank Checks:
+        Used Optional with filter to handle blank or null fields more cleanly in the update logic.
+
+    Error Handling:
+        Simplified error handling and ensured meaningful HTTP response statuses.
+
+    Documentation:
+        Added JavaDoc comments for better readability and maintainability.
+
+    Secure Controller:
+        Avoided exposing too much error information to prevent leaking sensitive details.
+
+    Best Practices:
+        Removed redundant repository methods (e.g., findById in JournalRepository, as JpaRepository already provides this).
+
+    Spring Validations:
+        Incorporated basic input validations using annotations to enforce constraints.
+
