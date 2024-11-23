@@ -27,7 +27,7 @@ public class JournalEntryController {
      *
      * @return ResponseEntity containing the list of entries or NOT_FOUND status.
      */
-    @GetMapping
+    @GetMapping("/journal")
     public ResponseEntity<List<JournalEntry>> getAll() {
         List<JournalEntry> allEntries = journalService.getAll();
         return allEntries.isEmpty()
@@ -41,11 +41,12 @@ public class JournalEntryController {
      * @param journalEntry The journal entry to be created.
      * @return ResponseEntity containing the created entry or BAD_REQUEST status in case of error.
      */
-    @PostMapping
+    @PostMapping("/create-journal")
     public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry journalEntry) {
         try {
-            journalEntry.setDate(LocalDateTime.now());
+//            journalEntry.setDate(LocalDateTime.now());
             journalService.saveEntry(journalEntry);
+            System.out.println("In controller");
             return new ResponseEntity<>(journalEntry, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -58,7 +59,7 @@ public class JournalEntryController {
      * @param id The ID of the journal entry.
      * @return ResponseEntity containing the journal entry or NOT_FOUND status if not found.
      */
-    @GetMapping("/id/{id}")
+    @GetMapping("/journal/id/{id}")
     public ResponseEntity<JournalEntry> getById(@PathVariable Long id) {
         return journalService.getById(id)
                 .map(entry -> new ResponseEntity<>(entry, HttpStatus.OK))
@@ -72,7 +73,7 @@ public class JournalEntryController {
      * @param id       The ID of the entry to update.
      * @return ResponseEntity containing the updated entry or NOT_FOUND status if entry not found.
      */
-    @PutMapping("/id/{id}")
+    @PutMapping("/update-journal/id/{id}")
     public ResponseEntity<JournalEntry> updateById(
             @RequestBody JournalEntry newEntry,
             @PathVariable Long id) {
@@ -101,7 +102,7 @@ public class JournalEntryController {
      * @param id The ID of the entry to delete.
      * @return ResponseEntity with NO_CONTENT status.
      */
-    @DeleteMapping("/id/{id}")
+    @DeleteMapping("/delete-journal/id/{id}")
     public ResponseEntity<Void> deleteEntry(@PathVariable Long id) {
         if (journalService.findById(id).isPresent()) {
             journalService.delete(id);

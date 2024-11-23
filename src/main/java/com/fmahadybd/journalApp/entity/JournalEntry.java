@@ -1,5 +1,7 @@
 package com.fmahadybd.journalApp.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 //import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -26,5 +28,12 @@ public class JournalEntry {
      **/
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
+    @JsonBackReference
     private UserEntry user;
+
+    // Automatically set the date field before persisting
+    @PrePersist
+    public void prePersist() {
+        this.date = LocalDateTime.now();
+    }
 }

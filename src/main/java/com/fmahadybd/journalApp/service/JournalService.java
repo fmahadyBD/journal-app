@@ -41,7 +41,9 @@ public class JournalService {
      *
      * @param journalEntry The journal entry to save.
      */
-    public void saveEntry(JournalEntry journalEntry) {
+    public void saveEntry(JournalEntry journalEntry)
+    {
+        System.out.println("In service");
         journalRepository.save(journalEntry);
     }
 

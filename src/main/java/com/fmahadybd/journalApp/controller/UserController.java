@@ -23,7 +23,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
+    @GetMapping("/users")
     public ResponseEntity<?> getAllUser(){
         List<UserEntry> users = userService.getAllUser();
         return users.isEmpty()
@@ -31,13 +31,13 @@ public class UserController {
                 : new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/create-user")
     public ResponseEntity<?> createNewUser(@RequestBody UserEntry userEntry){
         try{
             UserEntry savedUserEntry = userService.savedUserEntry(userEntry);
             return new ResponseEntity<>(savedUserEntry,CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(),BAD_REQUEST);
         }
     }
 /**
@@ -45,7 +45,7 @@ public class UserController {
  * optional in the service then we can use the map in the controller
  * and also can use all of them
  * */
-    @PutMapping("{usernameOfOld}")
+    @PutMapping("/update-user/username/{usernameOfOld}")
     public ResponseEntity<?> updateUserEntryByUserName(@RequestBody UserEntry userEntry,
                                                        @PathVariable String usernameOfOld) {
         return userService.findByUsername(usernameOfOld)
@@ -66,7 +66,18 @@ public class UserController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("{username}")
+    @DeleteMapping("/delete-user/id/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        try {
+            userService.deleteUserEntry(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>("User not found or unable to delete.", HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    @GetMapping("user/id/{username}")
     public ResponseEntity<?> getUserById(@PathVariable String username) {
     Optional<UserEntry> userEntryOfId = userService.findByUsername(username);
     return userEntryOfId.isEmpty()?
@@ -74,4 +85,6 @@ public class UserController {
             new ResponseEntity<>(userEntryOfId,HttpStatus.OK);
 
     }
+
+
 }
