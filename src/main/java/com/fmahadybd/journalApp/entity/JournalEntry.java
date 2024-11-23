@@ -16,11 +16,15 @@ public class JournalEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-//    @NotBlank(message = "Title cannot be blank")
     private String title;
-
     private String content;
-
     private LocalDateTime date;
+
+    /**
+     * @JoinColumn(name ="user_id") means Specifies the name of the foreign Key Column in the JournalEntry table
+     * Ensures each JournalEntry is linked to a specific UserEntry
+     **/
+    @ManyToOne
+    @JoinColumn(name = "user_id",nullable = false)
+    private UserEntry user;
 }
